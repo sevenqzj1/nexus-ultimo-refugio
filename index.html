@@ -1,73 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>NEXUS — O Último Refúgio</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;600;700&display=swap');
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05090d;color:#e9f3f7;font-family:Rajdhani,Arial}
-canvas{display:block}#ui{position:fixed;inset:0;pointer-events:none}
-.top{position:absolute;top:22px;left:26px;text-shadow:0 2px 12px #000}.brand{font:700 19px Orbitron;letter-spacing:4px;color:#b8f3ff}.sub{font-size:12px;letter-spacing:3px;color:#91a8b2}
-.stats{position:absolute;left:26px;bottom:25px;width:235px;background:linear-gradient(90deg,#07131bdc,#07131b66);padding:13px 15px;border-left:2px solid #4dd8ee}
-.stat{display:flex;justify-content:space-between;font-size:13px;letter-spacing:1px;margin:5px 0}.bar{height:7px;background:#23343d;margin-top:3px}.fill{height:100%;background:#5bd7e8;width:100%;transition:width .2s}.health{background:#d65d5d}.stamina{background:#d4c16b}
-.objective{position:absolute;right:25px;top:25px;text-align:right;background:#07131bbd;padding:13px 17px;border-right:2px solid #60d8e9;max-width:280px}.objective b{font:600 11px Orbitron;color:#73ddeb;letter-spacing:2px}.objective div{font-size:17px;margin-top:5px}
-.hint{position:absolute;bottom:27px;left:50%;transform:translateX(-50%);color:#d4e4e9;background:#07131bcc;padding:8px 14px;font-size:13px;letter-spacing:1px}
-#start{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,#142a35dd,#020609f5);z-index:5}
-.panel{width:min(620px,90vw);padding:42px;background:#07131beF;border:1px solid #31505b;box-shadow:0 0 80px #1b819044;text-align:center}
-h1{font:700 clamp(28px,6vw,52px) Orbitron;letter-spacing:4px;margin:0;color:#dffaff}h1 span{color:#56d8e9}.tag{letter-spacing:5px;color:#9bb6bf;margin:12px 0 28px}
-.panel p{color:#b5c9cf;line-height:1.6}.btn{pointer-events:auto;border:1px solid #65e0ed;background:#0d303a;color:#eaffff;padding:13px 30px;font:600 13px Orbitron;letter-spacing:2px;cursor:pointer;margin-top:16px}.btn:hover{background:#15505c}
-#toast{position:absolute;top:105px;left:50%;transform:translateX(-50%);font:600 12px Orbitron;letter-spacing:2px;color:#b8f5ff;background:#07131be8;padding:10px 16px;opacity:0;transition:opacity .3s}
-#cross{position:absolute;left:50%;top:50%;width:14px;height:14px;transform:translate(-50%,-50%);opacity:.7}
-#cross:before,#cross:after{content:"";position:absolute;background:#d7faff}#cross:before{width:1px;height:14px;left:7px}#cross:after{height:1px;width:14px;top:7px}
-#damage{position:absolute;inset:0;background:radial-gradient(transparent 45%,#d22b2b99);opacity:0;transition:opacity .15s}
-@media(max-width:600px){.stats{width:180px;left:12px;bottom:12px}.objective{right:10px;top:10px;max-width:190px}.hint{bottom:120px;white-space:nowrap}.panel{padding:25px}}
-</style>
-</head>
-<body>
-<div id="start"><div class="panel"><h1>NEXUS <span>07</span></h1><div class="tag">O ÚLTIMO REFÚGIO</div><p>O mundo caiu. O sinal do Abrigo 07 foi perdido.<br>Explore as ruínas, recupere suprimentos e sobreviva.</p><p><b>W A S D</b> mover · <b>SHIFT</b> correr · <b>MOUSE</b> olhar<br><b>ESPAÇO</b> pular · <b>E</b> coletar · <b>F</b> lanterna</p><button class="btn" id="play">INICIAR OPERAÇÃO</button></div></div>
-<div id="ui"><div class="top"><div class="brand">NEXUS // 07</div><div class="sub">ZONA DE EXCLUSÃO — SETOR URBANO</div></div>
-<div class="objective"><b>OBJETIVO ATUAL</b><div id="mission">Localize suprimentos na área</div></div>
-<div class="stats"><div class="stat"><span>INTEGRIDADE</span><b id="hpv">100%</b></div><div class="bar"><div class="fill health" id="hp"></div></div><div class="stat"><span>ENERGIA</span><b id="stamv">100%</b></div><div class="bar"><div class="fill stamina" id="stam"></div></div><div class="stat"><span>SUPRIMENTOS</span><b id="loot">0 / 5</b></div></div>
-<div id="cross"></div><div class="hint" id="hint">WASD para explorar · E para interagir</div><div id="toast"></div><div id="damage"></div></div>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@500;700;800&display=swap');
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05090d;color:#eafaff;font-family:Rajdhani,Arial}canvas{display:block}
+#hud{position:fixed;inset:0;pointer-events:none;text-shadow:0 2px 8px #000}.brand{position:absolute;top:18px;left:22px;font:800 18px Orbitron;letter-spacing:3px;color:#b9f4ff}.sector{font-size:11px;letter-spacing:2px;color:#9ab8c1}
+.box{background:#07141bdc;border:1px solid #31515c;padding:10px 13px}.objective{position:absolute;right:20px;top:18px;width:255px;border-right:3px solid #54d8e9;text-align:right}.objective small{color:#6ce3f1;font:11px Orbitron;letter-spacing:1.5px}.objective strong{display:block;font-size:18px;margin-top:4px}.stats{position:absolute;left:20px;bottom:20px;width:230px}.line{display:flex;justify-content:space-between;font-weight:700;letter-spacing:1px;font-size:13px;margin:4px 0}.bar{height:7px;background:#25343a;margin-bottom:9px}.fill{height:100%;width:100%;background:#5bd9e9;transition:width .15s}.hp{background:#e35e62}.ammo{position:absolute;right:20px;bottom:20px;text-align:right;font:700 22px Orbitron}.ammo small{display:block;font:11px Rajdhani;letter-spacing:2px;color:#a8c3cb}.hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);padding:8px 14px;background:#07141bdc;white-space:nowrap;font-weight:700;letter-spacing:1px}.cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px}.cross:before,.cross:after{content:"";position:absolute;background:#e4fbff}.cross:before{left:7px;width:2px;height:16px}.cross:after{top:7px;height:2px;width:16px}
+#toast{position:absolute;top:105px;left:50%;transform:translateX(-50%);background:#07141bf2;border:1px solid #4bc8d9;padding:10px 18px;color:#c8faff;font:600 12px Orbitron;letter-spacing:1.5px;opacity:0;transition:opacity .2s}
+#screen{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:radial-gradient(ellipse at center,#17313ddd,#020609f5)}.panel{width:min(650px,92vw);padding:34px;background:#07131bf2;border:1px solid #41616b;box-shadow:0 0 90px #1687a044;text-align:center}.panel h1{font:800 clamp(30px,6vw,54px) Orbitron;letter-spacing:4px;margin:0;color:#e4fbff}.panel h1 span{color:#56d8e9}.tag{color:#91b7c2;letter-spacing:5px;margin:9px 0 20px}.panel p{color:#bfd1d7;line-height:1.6}.btn{border:1px solid #67e1ef;background:#10343d;color:#eaffff;padding:13px 25px;font:700 12px Orbitron;letter-spacing:2px;cursor:pointer;margin-top:12px}.btn:hover{background:#185361}.keys{font-size:13px;color:#a7c4cc}.hidden{display:none!important}
+@media(max-width:600px){.stats{width:165px;left:8px;bottom:10px}.objective{right:8px;top:8px;width:190px}.hint{bottom:115px;font-size:11px}.ammo{right:9px;bottom:10px;font-size:17px}.brand{top:8px;left:9px;font-size:14px}.sector{font-size:9px}}
+</style></head><body>
+<div id="screen"><div class="panel"><h1>NEXUS <span>07</span></h1><div class="tag">O ÚLTIMO REFÚGIO</div><p id="intro">Ano 2049. A cidade caiu após o Colapso. O Abrigo 07 ainda transmite um sinal fraco.<br>Encontre 3 células de energia, sobreviva aos infectados e alcance o ponto de extração.</p><p class="keys"><b>WASD</b> mover · <b>SHIFT</b> correr · <b>MOUSE</b> mirar · <b>CLIQUE</b> atirar<br><b>R</b> recarregar · <b>F</b> lanterna · <b>E</b> interagir · <b>ESC</b> pausar</p><button class="btn" id="start">INICIAR OPERAÇÃO</button></div></div>
+<div id="hud"><div class="brand">NEXUS // 07<div class="sector">ZONA DE EXCLUSÃO — SETOR URBANO</div></div><div class="objective box"><small>MISSÃO PRINCIPAL</small><strong id="mission">Recupere as células: 0/3</strong></div><div class="stats box"><div class="line"><span>INTEGRIDADE</span><b id="hpv">100%</b></div><div class="bar"><div class="fill hp" id="hp"></div></div><div class="line"><span>ENERGIA</span><b id="sv">100%</b></div><div class="bar"><div class="fill" id="stam"></div></div><div class="line"><span>INFECTADOS</span><b id="enemies">0</b></div></div><div class="ammo"><span id="ammo">12 / 48</span><small>MUNIÇÃO · R RECARREGAR</small></div><div class="cross"></div><div class="hint" id="hint">Explore a cidade e procure as células de energia</div><div id="toast"></div></div>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-import { PointerLockControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/PointerLockControls.js';
-
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x87949a);scene.fog=new THREE.FogExp2(0x87949a,.018);
-const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,350);camera.position.set(0,1.7,9);
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;document.body.appendChild(renderer.domElement);
+import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/PointerLockControls.js';
+const $=id=>document.getElementById(id);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x7c898e);scene.fog=new THREE.FogExp2(0x7c898e,.012);
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,260);camera.position.set(0,1.7,12);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;document.body.appendChild(renderer.domElement);
 const controls=new PointerLockControls(camera,document.body);
-scene.add(new THREE.HemisphereLight(0xc8e4ef,0x34302b,2.0));
-const sun=new THREE.DirectionalLight(0xffe4c2,3.1);sun.position.set(-25,45,15);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-65;sun.shadow.camera.right=65;sun.shadow.camera.top=65;sun.shadow.camera.bottom=-65;scene.add(sun);
-const groundMat=new THREE.MeshStandardMaterial({color:0x555b58,roughness:1});
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(180,180),groundMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
-const mats=[0x596166,0x6d6b64,0x3e484d,0x77746a].map(c=>new THREE.MeshStandardMaterial({color:c,roughness:.94}));
-const dark=new THREE.MeshStandardMaterial({color:0x20292c,roughness:1});
-function box(x,y,z,w,h,d,mat,rot=0){let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.rotation.y=rot;m.castShadow=true;m.receiveShadow=true;scene.add(m);return m}
+scene.add(new THREE.HemisphereLight(0xc9e5ed,0x35302a,1.8));const sun=new THREE.DirectionalLight(0xffdfbd,2.7);sun.position.set(-28,42,20);sun.castShadow=true;sun.shadow.mapSize.set(1536,1536);sun.shadow.camera.left=-70;sun.shadow.camera.right=70;sun.shadow.camera.top=70;sun.shadow.camera.bottom=-70;scene.add(sun);
+const mat=(c,rough=1,metal=0)=>new THREE.MeshStandardMaterial({color:c,roughness:rough,metalness:metal});
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(180,180),mat(0x555b58));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+const concrete=[0x596166,0x6d6b64,0x3e484d,0x77746a].map(c=>mat(c));const dark=mat(0x20292c),roadMat=mat(0x252b2d);
+const obstacles=[];
+function cube(x,y,z,w,h,d,m,solid=true){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);if(solid)obstacles.push({x,z,w,d});return o}
 let seed=83;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
-for(let i=0;i<55;i++){let x=(rand()-.5)*125,z=(rand()-.5)*125;if(Math.abs(x)<8&&Math.abs(z)<12)continue;let w=4+rand()*7,h=5+rand()*18,d=4+rand()*7;box(x,h/2,z,w,h,d,mats[Math.floor(rand()*mats.length)],rand()*.2);if(rand()>.35){for(let j=0;j<3;j++)box(x-w*.28+j*w*.28,h*.55,z-d/2-.03,.65,.9,.08,dark)}}
-for(let i=0;i<24;i++){let x=(rand()-.5)*85,z=(rand()-.5)*85;let trunk=box(x,1.5,z,.35,3,.35,dark);let crown=new THREE.Mesh(new THREE.IcosahedronGeometry(1.8,1),new THREE.MeshStandardMaterial({color:0x303b36,roughness:1}));crown.position.set(x,4,z);crown.castShadow=true;scene.add(crown)}
-const road=new THREE.Mesh(new THREE.PlaneGeometry(13,150),new THREE.MeshStandardMaterial({color:0x252b2d,roughness:1}));road.rotation.x=-Math.PI/2;road.position.set(0,.015,0);scene.add(road);
-for(let i=0;i<16;i++){box((rand()-.5)*10,.45,(rand()-.5)*100,.4,.9,.5,mats[2],rand()*2)}
-function car(x,z,color){let m=new THREE.MeshStandardMaterial({color,metalness:.35,roughness:.7});box(x,.65,z,2.2,.8,4,m);box(x,.125,z,2.1,.25,3.9,dark);for(let dx of [-1,1])for(let dz of [-1.25,1.25]){let wh=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.22,16),dark);wh.rotation.z=Math.PI/2;wh.position.set(x+dx,.4,z+dz);scene.add(wh)}}
+for(let i=0;i<47;i++){let x=(rand()-.5)*125,z=(rand()-.5)*125;if(Math.abs(x)<10&&Math.abs(z)<14)continue;let w=5+rand()*7,h=6+rand()*16,d=5+rand()*7;cube(x,h/2,z,w,h,d,concrete[Math.floor(rand()*4)]);if(rand()>.45)for(let j=0;j<3;j++)cube(x-w*.28+j*w*.28,h*.55,z-d/2-.04,.7,.9,.08,dark,false)}
+const road=new THREE.Mesh(new THREE.PlaneGeometry(13,150),roadMat);road.rotation.x=-Math.PI/2;road.position.y=.02;scene.add(road);
+for(let i=0;i<19;i++){const x=(rand()-.5)*10,z=(rand()-.5)*110;cube(x,.45,z,.4,.9,.5,dark,false)}
+for(let i=0;i<17;i++){let x=(rand()-.5)*90,z=(rand()-.5)*90;cube(x,1.5,z,.35,3,.35,dark,false);let crown=new THREE.Mesh(new THREE.IcosahedronGeometry(1.8,1),mat(0x303b36));crown.position.set(x,4,z);crown.castShadow=true;scene.add(crown)}
+function car(x,z,color){cube(x,.65,z,2.2,.8,4,mat(color,.7,.3),false);cube(x,1.2,z,1.8,.65,2.2,mat(0x283438,.5,.2),false);for(let dx of [-1,1])for(let dz of [-1.25,1.25]){let w=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.22,14),dark);w.rotation.z=Math.PI/2;w.position.set(x+dx,.4,z+dz);scene.add(w)}}
 car(-3,-8,0x555d60);car(4,17,0x6a5144);car(-5,35,0x4d5c5d);
-box(16,1.2,-25,13,1.8,5,mats[2],-.45);box(16,3,-25,4,2,4,mats[0],-.45);
-const loot=[];const lootMat=new THREE.MeshStandardMaterial({color:0x2f7778,metalness:.4,roughness:.55});
-for(let i=0;i<5;i++){let x=[-7,8,19,-18,26][i],z=[-18,10,-5,27,38][i];let c=box(x,.55,z,1.15,1.05,.85,lootMat,rand());let glow=new THREE.PointLight(0x39dbea,1.5,5);glow.position.set(x,1.6,z);scene.add(glow);loot.push({mesh:c,got:false,glow})}
-const flashlight=new THREE.SpotLight(0xd8f7ff,0,35,Math.PI/7,.4,1.4);camera.add(flashlight);flashlight.position.set(0,0,0);flashlight.target.position.set(0,0,-1);camera.add(flashlight.target);scene.add(camera);
-const keys={};let stamina=100,count=0,light=false,velY=0,onGround=true,game=false;
-document.addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='KeyF'){light=!light;flashlight.intensity=light?5:0;toast(light?'LANTERNA ATIVADA':'LANTERNA DESATIVADA')}if(e.code==='KeyE')interact()});
-document.addEventListener('keyup',e=>keys[e.code]=false);
-document.getElementById('play').onclick=()=>{controls.lock();game=true;document.getElementById('start').style.display='none';toast('OPERAÇÃO INICIADA — ABRIGO 07')};
-controls.addEventListener('unlock',()=>{if(game){document.getElementById('start').style.display='grid';document.querySelector('.panel p').innerHTML='PAUSADO<br>Retome a operação para continuar.';document.getElementById('play').textContent='CONTINUAR'}});
-function toast(t){let el=document.getElementById('toast');el.textContent=t;el.style.opacity=1;clearTimeout(window.tt);window.tt=setTimeout(()=>el.style.opacity=0,2100)}
-function interact(){let nearest=null,dist=3;for(let l of loot){if(l.got)continue;let d=camera.position.distanceTo(l.mesh.position);if(d<dist){dist=d;nearest=l}}if(nearest){nearest.got=true;nearest.mesh.visible=false;nearest.glow.visible=false;count++;document.getElementById('loot').textContent=count+' / 5';toast('SUPRIMENTO RECUPERADO');if(count===5){document.getElementById('mission').textContent='Sinal do Abrigo 07 localizado';toast('OBJETIVO CONCLUÍDO — SINAL DETECTADO')}}else toast('NENHUM ITEM AO ALCANCE')}
-const clock=new THREE.Clock();const direction=new THREE.Vector3(),forward=new THREE.Vector3(),right=new THREE.Vector3();
-function animate(){requestAnimationFrame(animate);let dt=Math.min(clock.getDelta(),.04);if(controls.isLocked&&game){let moving=keys.KeyW||keys.KeyA||keys.KeyS||keys.KeyD;let running=keys.ShiftLeft&&stamina>1;if(running&&moving)stamina=Math.max(0,stamina-24*dt);else stamina=Math.min(100,stamina+13*dt);let speed=running?8.5:4.6;forward.set(0,0,-1).applyQuaternion(camera.quaternion);forward.y=0;forward.normalize();right.set(1,0,0).applyQuaternion(camera.quaternion);right.y=0;right.normalize();direction.set(0,0,0);if(keys.KeyW)direction.add(forward);if(keys.KeyS)direction.sub(forward);if(keys.KeyD)direction.add(right);if(keys.KeyA)direction.sub(right);if(direction.lengthSq()){direction.normalize();controls.getObject().position.addScaledVector(direction,speed*dt)}
-if(keys.Space&&onGround){velY=6.5;onGround=false}velY-=18*dt;camera.position.y+=velY*dt;if(camera.position.y<1.7){camera.position.y=1.7;velY=0;onGround=true}
-camera.position.x=THREE.MathUtils.clamp(camera.position.x,-65,65);camera.position.z=THREE.MathUtils.clamp(camera.position.z,-65,65);
-document.getElementById('stam').style.width=stamina+'%';document.getElementById('stamv').textContent=Math.round(stamina)+'%';
-let target=loot.find(l=>!l.got&&camera.position.distanceTo(l.mesh.position)<3);document.getElementById('hint').textContent=target?'E — COLETAR SUPRIMENTO':'WASD mover · SHIFT correr · F lanterna · E interagir'}
+const beacon=new THREE.Group();beacon.position.set(0,0,-57);scene.add(beacon);cube(0,.4,-57,8,.8,8,mat(0x263d43),false);const ring=new THREE.Mesh(new THREE.TorusGeometry(3,.13,8,40),mat(0x49e4f2,.4,.4));ring.rotation.x=Math.PI/2;ring.position.set(0,.3,-57);scene.add(ring);const beam=new THREE.PointLight(0x3bd9ec,3,24);beam.position.set(0,4,-57);scene.add(beam);
+const pickupMat=mat(0x2d8588,.35,.55),pickups=[];
+for(let i=0;i<3;i++){const x=[-9,18,-23][i],z=[-19,7,-35][i];const mesh=cube(x,.65,z,1.1,1.2,.9,pickupMat,false);const glow=new THREE.PointLight(0x39e7ef,2,7);glow.position.set(x,1.8,z);scene.add(glow);pickups.push({mesh,glow,taken:false})}
+const enemyMat=mat(0x4c2929,.9),enemyGlow=mat(0x9d302b,.5);const enemies=[];
+function spawnEnemy(x,z){const g=new THREE.Group();const body=new THREE.Mesh(new THREE.CapsuleGeometry(.42,.75,4,8),enemyMat);body.position.y=1;body.castShadow=true;g.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.29,10,8),enemyMat);head.position.y=1.7;head.castShadow=true;g.add(head);for(let s of [-1,1]){const eye=new THREE.Mesh(new THREE.SphereGeometry(.055,8,8),enemyGlow);eye.position.set(s*.12,1.73,-.24);g.add(eye)}g.position.set(x,0,z);scene.add(g);enemies.push({g,hp:100,attack:0,speed:1.25+rand()*.45,alive:true})}
+[[-15,-7],[13,-12],[24,20],[-25,17],[4,-34],[32,-29],[-35,-42],[10,42]].forEach(p=>spawnEnemy(...p));
+const flashlight=new THREE.SpotLight(0xd8f7ff,0,38,Math.PI/7,.4,1.4);camera.add(flashlight);flashlight.position.set(0,0,0);flashlight.target.position.set(0,0,-1);camera.add(flashlight.target);scene.add(camera);
+const keys={};let hp=100,stamina=100,ammo=12,reserve=48,got=0,light=false,velY=0,onGround=true,active=false,ended=false,reloading=false,lastShot=0,invuln=0,won=false;
+const ray=new THREE.Raycaster();const clock=new THREE.Clock();const forward=new THREE.Vector3(),right=new THREE.Vector3(),move=new THREE.Vector3();
+function toast(t){$('toast').textContent=t;$('toast').style.opacity=1;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('toast').style.opacity=0,1900)}
+function updateHud(){$('hp').style.width=hp+'%';$('hpv').textContent=Math.ceil(hp)+'%';$('stam').style.width=stamina+'%';$('sv').textContent=Math.ceil(stamina)+'%';$('ammo').textContent=ammo+' / '+reserve;$('enemies').textContent=enemies.filter(e=>e.alive).length;$('mission').textContent=got<3?'Recupere as células: '+got+'/3':'Alcance a extração';}
+function endGame(v){if(ended)return;ended=true;active=false;controls.unlock();$('screen').classList.remove('hidden');$('intro').innerHTML=v?'<b>MISSÃO CONCLUÍDA</b><br>Você ativou o sinal e alcançou o Abrigo 07. A humanidade ainda tem uma chance.':'<b>OPERAÇÃO ENCERRADA</b><br>Você foi abatido antes de chegar ao abrigo. Reorganize-se e tente novamente.';$('start').textContent='JOGAR NOVAMENTE';}
+function shoot(){if(!active||ended||!controls.isLocked||Date.now()-lastShot<260||reloading)return;lastShot=Date.now();if(ammo<=0){toast('SEM MUNIÇÃO — PRESSIONE R');return}ammo--;updateHud();ray.setFromCamera(new THREE.Vector2(0,0),camera);const targets=[];for(const e of enemies)if(e.alive)e.g.traverse(o=>{if(o.isMesh)targets.push(o)});const hits=ray.intersectObjects(targets,false);if(hits.length){const e=enemies.find(en=>{let found=false;en.g.traverse(o=>{if(o===hits[0].object)found=true});return found});if(e){e.hp-=50;toast(e.hp<=0?'INFECTADO ELIMINADO':'ALVO ATINGIDO');if(e.hp<=0){e.alive=false;e.g.visible=false;updateHud()}}}}
+function reload(){if(reloading||ammo===12||reserve<=0||!active)return;reloading=true;toast('RECARREGANDO...');setTimeout(()=>{const n=Math.min(12-ammo,reserve);ammo+=n;reserve-=n;reloading=false;updateHud()},1150)}
+function interact(){if(!active||!controls.isLocked)return;let nearest=null,dist=3.2;for(const p of pickups)if(!p.taken){const d=camera.position.distanceTo(p.mesh.position);if(d<dist){dist=d;nearest=p}}if(nearest){nearest.taken=true;nearest.mesh.visible=false;nearest.glow.visible=false;got++;reserve+=12;toast('CÉLULA RECUPERADA · +12 MUNIÇÕES');updateHud();return}if(got===3&&camera.position.distanceTo(new THREE.Vector3(0,1.7,-57))<5){endGame(true);return}toast('NÃO HÁ NADA PARA INTERAGIR AQUI')}
+function damage(n){if(invuln>0)return;hp=Math.max(0,hp-n);invuln=.65;document.body.style.boxShadow='inset 0 0 90px #e22';setTimeout(()=>document.body.style.boxShadow='',180);updateHud();if(hp<=0)endGame(false)}
+function blocked(x,z){for(const o of obstacles){const px=Math.max(o.x-o.w/2-.5,Math.min(x,o.x+o.w/2+.5)),pz=Math.max(o.z-o.d/2-.5,Math.min(z,o.z+o.d/2+.5));if((x-px)**2+(z-pz)**2<.32)return true}return false}
+document.addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='KeyF'){light=!light;flashlight.intensity=light?5:0;toast(light?'LANTERNA LIGADA':'LANTERNA DESLIGADA')}if(e.code==='KeyE)interact();if(e.code==='KeyR')reload()});
+document.addEventListener('keyup',e=>keys[e.code]=false);document.addEventListener('mousedown',e=>{if(e.button===0)shoot()});
+$('start').onclick=()=>{if(ended){location.reload();return}controls.lock();active=true;$('screen').classList.add('hidden')};
+controls.addEventListener('unlock',()=>{if(active&&!ended){active=false;$('screen').classList.remove('hidden');$('intro').innerHTML='OPERAÇÃO PAUSADA<br>Retome para continuar a missão.';$('start').textContent='CONTINUAR'}});
+function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),.04),now=clock.elapsedTime;if(active&&controls.isLocked&&!ended){invuln=Math.max(0,invuln-dt);const moving=keys.KeyW||keys.KeyA||keys.KeyS||keys.KeyD,running=keys.ShiftLeft&&stamina>0&&moving;stamina=running?Math.max(0,stamina-26*dt):Math.min(100,stamina+16*dt);const speed=running?7.6:4.2;forward.set(0,0,-1).applyQuaternion(camera.quaternion);forward.y=0;forward.normalize();right.set(1,0,0).applyQuaternion(camera.quaternion);right.y=0;right.normalize();move.set(0,0,0);if(keys.KeyW)move.add(forward);if(keys.KeyS)move.sub(forward);if(keys.KeyD)move.add(right);if(keys.KeyA)move.sub(right);if(move.lengthSq()){move.normalize();const nx=camera.position.x+move.x*speed*dt,nz=camera.position.z+move.z*speed*dt;if(!blocked(nx,camera.position.z))camera.position.x=nx;if(!blocked(camera.position.x,nz))camera.position.z=nz}
+if(keys.Space&&onGround){velY=6;onGround=false}velY-=17*dt;camera.position.y+=velY*dt;if(camera.position.y<1.7){camera.position.y=1.7;velY=0;onGround=true}camera.position.x=THREE.MathUtils.clamp(camera.position.x,-72,72);camera.position.z=THREE.MathUtils.clamp(camera.position.z,-72,72);
+for(const e of enemies){if(!e.alive)continue;const dx=camera.position.x-e.g.position.x,dz=camera.position.z-e.g.position.z,d=Math.hypot(dx,dz);if(d>1.25){const step=e.speed*dt;e.g.position.x+=dx/d*step;e.g.position.z+=dz/d*step;e.g.lookAt(camera.position.x,0,camera.position.z)}else{e.attack-=dt;if(e.attack<=0){damage(9);e.attack=1.05}}}
+for(const p of pickups)if(!p.taken)p.mesh.rotation.y+=dt*.8;
+const extractionDistance=camera.position.distanceTo(new THREE.Vector3(0,1.7,-57));$('hint').textContent=got===3?(extractionDistance<5?'E — ATIVAR EXTRAÇÃO':'Vá até o sinal verde no ponto de extração'):'Procure as células brilhantes · E para coletar';if(got===3&&extractionDistance<5&&keys.KeyE)interact();updateHud()}
 renderer.render(scene,camera)}
-animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+$('start').textContent='INICIAR OPERAÇÃO';updateHud();tick();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 </script></body></html>
